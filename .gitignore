@@ -1,0 +1,17 @@
+.vs/
+
+*.suo
+*.user
+
+*.log
+*.tlog
+*.idb
+*.obj
+*.pdb
+
+*.ilk
+*.iobj
+*.ipdb
+*.exe
+
+glad.lib
