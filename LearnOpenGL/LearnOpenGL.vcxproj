@@ -155,6 +155,18 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shader_s.h" />
+    <ClInclude Include="stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\awesomeface.jpg" />
+    <Image Include="textures\container.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\texture.fs" />
+    <None Include="shaders\texture.vs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
