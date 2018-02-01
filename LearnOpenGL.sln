@@ -10,7 +10,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LearnOpenGL", "LearnOpenGL\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{B80507D0-70D5-4384-B027-7E8A42BC71B8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Glad", "Libraries\glad\glad.vcxproj", "{232EC3F2-CF4A-4179-A60B-80EC0A0128E0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glad", "Libraries\glad\glad.vcxproj", "{232EC3F2-CF4A-4179-A60B-80EC0A0128E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lighting", "Lighting", "{24673D11-0549-464E-9465-5B077A0C62D6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicLighting", "Lighting\BasicLighting\BasicLighting.vcxproj", "{E3938069-74E9-4D9F-8CE5-27341C1F9D71}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,11 +43,20 @@ Global
 		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0}.Release|x64.Build.0 = Release|x64
 		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0}.Release|x86.ActiveCfg = Release|Win32
 		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0}.Release|x86.Build.0 = Release|Win32
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71}.Debug|x64.ActiveCfg = Debug|x64
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71}.Debug|x64.Build.0 = Debug|x64
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71}.Debug|x86.ActiveCfg = Debug|Win32
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71}.Debug|x86.Build.0 = Debug|Win32
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71}.Release|x64.ActiveCfg = Release|x64
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71}.Release|x64.Build.0 = Release|x64
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71}.Release|x86.ActiveCfg = Release|Win32
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {B80507D0-70D5-4384-B027-7E8A42BC71B8}
+		{E3938069-74E9-4D9F-8CE5-27341C1F9D71} = {24673D11-0549-464E-9465-5B077A0C62D6}
 	EndGlobalSection
 EndGlobal

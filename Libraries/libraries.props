@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(SolutionDir)Libraries\glfw-3.2.1\include;$(SolutionDir)Libraries\glad\include;$(SolutionDir)Libraries\glm-0.9.8;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Libraries\include;$(SolutionDir)Libraries\glfw-3.2.1\include;$(SolutionDir)Libraries\glad\include;$(SolutionDir)Libraries\glm-0.9.8;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Libraries\glfw-3.2.1\lib\$(Platform)\$(Configuration);$(SolutionDir)Libraries\glad\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
