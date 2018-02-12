@@ -19,6 +19,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicLighting", "Lighting\B
 		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{7AF272BB-3669-4B7B-8124-642822603621}"
+	ProjectSection(SolutionItems) = preProject
+		Libraries\include\camera.h = Libraries\include\camera.h
+		Libraries\include\shader.h = Libraries\include\shader.h
+		Libraries\include\stb_image.h = Libraries\include\stb_image.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -58,5 +65,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {B80507D0-70D5-4384-B027-7E8A42BC71B8}
 		{E3938069-74E9-4D9F-8CE5-27341C1F9D71} = {24673D11-0549-464E-9465-5B077A0C62D6}
+		{7AF272BB-3669-4B7B-8124-642822603621} = {B80507D0-70D5-4384-B027-7E8A42BC71B8}
 	EndGlobalSection
 EndGlobal
