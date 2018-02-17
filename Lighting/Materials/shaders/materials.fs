@@ -42,5 +42,4 @@ void main()
         
     vec3 result = ambient + diffuse + specular;
     FragColor = vec4(result, 1.0);
-	//FragColor = vec4(TexCoords, 0.0, 1.0);
 } 
