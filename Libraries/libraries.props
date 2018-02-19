@@ -3,13 +3,16 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(SolutionDir)Libraries\include;$(SolutionDir)Libraries\glfw-3.2.1\include;$(SolutionDir)Libraries\glad\include;$(SolutionDir)Libraries\glm-0.9.8;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Libraries\glfw-3.2.1\lib\$(Platform)\$(Configuration);$(SolutionDir)Libraries\glad\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libraries\include;$(SolutionDir)Libraries\assimp-3.1.1\include;$(SolutionDir)Libraries\glfw-3.2.1\include;$(SolutionDir)Libraries\glad\include;$(SolutionDir)Libraries\glm-0.9.8;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\assimp-3.1.1\lib\$(Platform)\;$(SolutionDir)Libraries\glfw-3.2.1\lib\$(Platform)\$(Configuration);$(SolutionDir)Libraries\glad\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;glfw3.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y $(SolutionDir)Libraries\assimp-3.1.1\lib\$(Platform)\assimp.dll $(TargetDir)assimp.dll</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

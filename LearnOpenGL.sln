@@ -17,6 +17,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{7AF272BB-3669-4B7B-8124-642822603621}"
 	ProjectSection(SolutionItems) = preProject
 		Libraries\include\camera.h = Libraries\include\camera.h
+		Libraries\include\mesh.h = Libraries\include\mesh.h
+		Libraries\include\model.h = Libraries\include\model.h
 		Libraries\include\shader.h = Libraries\include\shader.h
 		Libraries\include\stb_image.h = Libraries\include\stb_image.h
 	EndProjectSection
