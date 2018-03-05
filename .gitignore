@@ -16,3 +16,7 @@
 
 glad.lib
 build/
+Debug/
+Release/
+Win32/
+x64/
