@@ -5,6 +5,8 @@
   <PropertyGroup>
     <IncludePath>$(SolutionDir)Libraries\include;$(SolutionDir)Libraries\assimp-3.1.1\include;$(SolutionDir)Libraries\glfw-3.2.1\include;$(SolutionDir)Libraries\glad\include;$(SolutionDir)Libraries\glm-0.9.8;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Libraries\assimp-3.1.1\lib\$(Platform)\;$(SolutionDir)Libraries\glfw-3.2.1\lib\$(Platform)\$(Configuration);$(SolutionDir)Libraries\glad\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <OutDir Condition="'$(Platform)' == 'Win32'">$(ProjectDir)$(Configuration)\</OutDir>
+	<OutDir Condition="'$(Platform)' == 'x64'">$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>

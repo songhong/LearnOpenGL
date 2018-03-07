@@ -24,20 +24,41 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{7AF2
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Materials", "Lighting\Materials\Materials.vcxproj", "{293C7EB9-2677-48C7-947E-9D40579F625B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spotlight", "Lighting\Spotlight\Spotlight.vcxproj", "{35FE833F-8594-4C85-B4F8-D7AADCDA47BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultipleLights", "Lighting\MultipleLights\MultipleLights.vcxproj", "{EE82EC69-3563-47E3-9A85-E9D2FAA4435B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Starting", "Starting\Starting.vcxproj", "{D4C6DE80-0284-43A5-93E5-F82C98B23A68}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Opengl", "Opengl", "{D1ABE823-D219-4195-8844-C9BA350076C9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DepthTesting", "Opengl\DepthTesting\DepthTesting.vcxproj", "{D4995235-3470-41ED-978C-042B61E03B71}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StencilTesting", "Opengl\StencilTesting\StencilTesting.vcxproj", "{6BF0A9A1-C0C0-4B2A-809B-E2A7F3C17FF2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Blending", "Opengl\Blending\Blending.vcxproj", "{F63C07EC-4077-458D-ABA1-77A323822614}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232EC3F2-CF4A-4179-A60B-80EC0A0128E0} = {232EC3F2-CF4A-4179-A60B-80EC0A0128E0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
