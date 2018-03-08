@@ -13,35 +13,50 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\skybox">
+      <UniqueIdentifier>{0018b783-4c5b-470a-8b4d-2e0bb773a19d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\cubemaps.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\cubemaps.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\skybox.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\skybox.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\container.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\skybox\back.jpg">
+      <Filter>Resource Files\skybox</Filter>
+    </Image>
+    <Image Include="textures\skybox\bottom.jpg">
+      <Filter>Resource Files\skybox</Filter>
+    </Image>
+    <Image Include="textures\skybox\front.jpg">
+      <Filter>Resource Files\skybox</Filter>
+    </Image>
+    <Image Include="textures\skybox\left.jpg">
+      <Filter>Resource Files\skybox</Filter>
+    </Image>
+    <Image Include="textures\skybox\right.jpg">
+      <Filter>Resource Files\skybox</Filter>
+    </Image>
+    <Image Include="textures\skybox\top.jpg">
+      <Filter>Resource Files\skybox</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shaders\framebuffers.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="shaders\framebuffers.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="shaders\framebuffers_screen.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="shaders\framebuffers_screen.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="textures\marble.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\metal.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\container.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>
