@@ -146,6 +146,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\default.vs" />
     <None Include="shaders\instancing.fs" />
     <None Include="shaders\instancing.vs" />
   </ItemGroup>

@@ -26,5 +26,8 @@
     <None Include="shaders\instancing.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="shaders\default.vs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
