@@ -89,6 +89,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BlinnPhong", "Lighting\Blin
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GammaCorrection", "Lighting\GammaCorrection\GammaCorrection.vcxproj", "{CEC278DF-3689-48EB-86F8-C354AB3D5FD1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShadowMapping", "Lighting\ShadowMapping\ShadowMapping.vcxproj", "{3F5DAB00-0978-4374-AA7F-24AE316460DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -225,6 +227,14 @@ Global
 		{CEC278DF-3689-48EB-86F8-C354AB3D5FD1}.Release|x64.Build.0 = Release|x64
 		{CEC278DF-3689-48EB-86F8-C354AB3D5FD1}.Release|x86.ActiveCfg = Release|Win32
 		{CEC278DF-3689-48EB-86F8-C354AB3D5FD1}.Release|x86.Build.0 = Release|Win32
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA}.Debug|x64.ActiveCfg = Debug|x64
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA}.Debug|x64.Build.0 = Debug|x64
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA}.Debug|x86.ActiveCfg = Debug|Win32
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA}.Debug|x86.Build.0 = Debug|Win32
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA}.Release|x64.ActiveCfg = Release|x64
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA}.Release|x64.Build.0 = Release|x64
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA}.Release|x86.ActiveCfg = Release|Win32
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -246,5 +256,6 @@ Global
 		{A2239611-E3BC-455D-A473-66580751E3A2} = {D1ABE823-D219-4195-8844-C9BA350076C9}
 		{52B7A631-212F-40F4-9E43-627ABE0A29AD} = {24673D11-0549-464E-9465-5B077A0C62D6}
 		{CEC278DF-3689-48EB-86F8-C354AB3D5FD1} = {24673D11-0549-464E-9465-5B077A0C62D6}
+		{3F5DAB00-0978-4374-AA7F-24AE316460DA} = {24673D11-0549-464E-9465-5B077A0C62D6}
 	EndGlobalSection
 EndGlobal
