@@ -31,6 +31,12 @@
     <None Include="shaders\debug_quad.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="shaders\shadow_mapping_depth.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\shadow_mapping_depth.vs">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="shaders\shadow_mapping.vs">
       <Filter>Resource Files</Filter>
     </None>

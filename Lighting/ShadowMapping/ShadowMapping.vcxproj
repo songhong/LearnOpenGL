@@ -151,6 +151,8 @@
   <ItemGroup>
     <None Include="shaders\shadow_mapping.fs" />
     <None Include="shaders\shadow_mapping.vs" />
+    <None Include="shaders\shadow_mapping_depth.fs" />
+    <None Include="shaders\shadow_mapping_depth.vs" />
     <None Include="shaders\debug_quad.fs" />
     <None Include="shaders\debug_quad.vs" />
   </ItemGroup>
