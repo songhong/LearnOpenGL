@@ -12,9 +12,6 @@ in VS_OUT {
 uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 
-uniform vec3 lightPos;
-uniform vec3 viewPos;
-
 void main()
 {           
 	float gamma = 2.1;
