@@ -153,6 +153,9 @@
     <Image Include="textures\bricks2.jpg" />
     <Image Include="textures\bricks2_disp.jpg" />
     <Image Include="textures\bricks2_normal.jpg" />
+    <Image Include="textures\toy_box_diffuse.png" />
+    <Image Include="textures\toy_box_disp.png" />
+    <Image Include="textures\toy_box_normal.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

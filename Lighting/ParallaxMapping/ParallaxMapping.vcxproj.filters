@@ -37,5 +37,14 @@
     <Image Include="textures\bricks2_normal.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\toy_box_diffuse.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\toy_box_disp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\toy_box_normal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

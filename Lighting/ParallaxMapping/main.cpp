@@ -84,9 +84,9 @@ int main()
     unsigned int diffuseMap = loadTexture("textures/bricks2.jpg");
     unsigned int normalMap = loadTexture("textures/bricks2_normal.jpg");
     unsigned int heightMap = loadTexture("textures/bricks2_disp.jpg");
-    /* unsigned int diffuseMap = loadTexture(FileSystem::getPath("resources/textures/toy_box_diffuse.png").c_str());
-    unsigned int normalMap = loadTexture(FileSystem::getPath("resources/textures/toy_box_normal.png").c_str());
-    unsigned int heightMap = loadTexture(FileSystem::getPath("resources/textures/toy_box_disp.png").c_str());*/
+    /*unsigned int diffuseMap = loadTexture("textures/toy_box_diffuse.png");
+    unsigned int normalMap = loadTexture("textures/toy_box_normal.png");
+    unsigned int heightMap = loadTexture("textures/toy_box_disp.png");*/
 
     // shader configuration
     // --------------------
