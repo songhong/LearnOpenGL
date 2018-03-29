@@ -33,6 +33,11 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+// control
+bool isNormalMapping   = true;
+bool isParallaxMapping = true;
+bool isGammaCorrection = false;
+
 int main()
 {
     // glfw: initialize and configure
@@ -122,11 +127,14 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         shader.use();
+        shader.setBool("isNormalMapping", isNormalMapping);
+        shader.setBool("isParallaxMapping", isParallaxMapping);
+        shader.setBool("isGammaCorrection", isGammaCorrection);
         shader.setMat4("projection", projection);
         shader.setMat4("view", view);
         // render parallax-mapped quad
         glm::mat4 model;
-        model = glm::rotate(model, glm::radians((float)glfwGetTime() * -10.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0))); // rotate the quad to show parallax mapping from multiple directions
+        //model = glm::rotate(model, glm::radians((float)glfwGetTime() * -10.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0))); // rotate the quad to show parallax mapping from multiple directions
         shader.setMat4("model", model);
         shader.setVec3("viewPos", camera.Position);
         shader.setVec3("lightPos", lightPos);
@@ -282,6 +290,39 @@ void processInput(GLFWwindow *window)
             heightScale += 0.0005f;
         else
             heightScale = 1.0f;
+    }
+
+    static bool KEY_N_Done = false;
+    if (glfwGetKey(window, GLFW_KEY_N) == GLFW_RELEASE)
+    {
+        KEY_N_Done = false;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS && !KEY_N_Done)
+    {
+        isNormalMapping = !isNormalMapping;
+        KEY_N_Done = true;
+    }
+
+    static bool KEY_P_Done = false;
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_RELEASE)
+    {
+        KEY_P_Done = false;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && !KEY_P_Done)
+    {
+        isParallaxMapping = !isParallaxMapping;
+        KEY_P_Done = true;
+    }
+
+    static bool KEY_Space_Done = false;
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+    {
+        KEY_Space_Done = false;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !KEY_Space_Done)
+    {
+        isGammaCorrection = !isGammaCorrection;
+        KEY_Space_Done = true;
     }
 }
 

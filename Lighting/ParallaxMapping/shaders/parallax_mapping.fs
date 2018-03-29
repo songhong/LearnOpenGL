@@ -15,11 +15,16 @@ uniform sampler2D depthMap;
 
 uniform float heightScale;
 
+// controll params
+uniform bool isNormalMapping;
+uniform bool isParallaxMapping;
+uniform bool isGammaCorrection;
+
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 { 
     // number of depth layers
     const float minLayers = 8;
-    const float maxLayers = 64;
+    const float maxLayers = 32;
     float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
     // calculate the size of each layer
     float layerDepth = 1.0 / numLayers;
@@ -59,20 +64,34 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 
 void main()
 {           
-    // offset texture coordinates with Parallax Mapping
+    const float gamma = 2.1;
+
     vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
     vec2 texCoords = fs_in.TexCoords;
     
-    texCoords = ParallaxMapping(fs_in.TexCoords,  viewDir);       
-    if(texCoords.x > 1.0 || texCoords.y > 1.0 || texCoords.x < 0.0 || texCoords.y < 0.0)
-        discard;
+	if (isParallaxMapping)
+	{
+		// offset texture coordinates with Parallax Mapping
+		texCoords = ParallaxMapping(fs_in.TexCoords,  viewDir);       
+		if(texCoords.x > 1.0 || texCoords.y > 1.0 || texCoords.x < 0.0 || texCoords.y < 0.0)
+			discard;
+	}
 
     // obtain normal from normal map
-    vec3 normal = texture(normalMap, texCoords).rgb;
-    normal = normalize(normal * 2.0 - 1.0);   
-
+    vec3 normal = vec3(0, 0, 1.0); // normal is always z-axis in tangent space
+	if (isNormalMapping)
+	{
+		normal = texture(normalMap, texCoords).rgb;
+		normal = normalize(normal * 2.0 - 1.0);  
+	}
+ 
     // get diffuse color
     vec3 color = texture(diffuseMap, texCoords).rgb;
+	if (isGammaCorrection)
+	{
+		color = pow(color, vec3(gamma));
+	}
+
     // ambient
     vec3 ambient = 0.1 * color;
     // diffuse
@@ -85,5 +104,11 @@ void main()
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
     vec3 specular = vec3(0.2) * spec;
-    FragColor = vec4(ambient + diffuse + specular, 1.0);
+	vec3 lighting = ambient + diffuse + specular;
+
+	if (isGammaCorrection)
+	{
+		lighting = pow(lighting, vec3(1.0 / gamma));
+	}
+    FragColor = vec4(lighting, 1.0);
 }
