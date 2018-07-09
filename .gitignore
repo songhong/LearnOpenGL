@@ -6,7 +6,6 @@
 *.log
 *.tlog
 *.idb
-*.obj
 *.pdb
 
 *.ilk
