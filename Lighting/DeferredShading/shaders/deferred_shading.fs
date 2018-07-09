@@ -26,6 +26,8 @@ void main()
     vec3 Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
     float Specular = texture(gAlbedoSpec, TexCoords).a;
     
+    Diffuse = pow(Diffuse, vec3(2.1)); // inverse gamma correction
+
     // then calculate lighting as usual
     vec3 lighting  = Diffuse * 0.1; // hard-coded ambient component
     vec3 viewDir  = normalize(viewPos - FragPos);
@@ -43,7 +45,10 @@ void main()
         float attenuation = 1.0 / (1.0 + lights[i].Linear * distance + lights[i].Quadratic * distance * distance);
         diffuse *= attenuation;
         specular *= attenuation;
-        lighting += diffuse + specular;        
+        lighting += diffuse + specular;
     }
+
+    lighting = pow(lighting, vec3(1.0/2.1)); // gamma correction
+
     FragColor = vec4(lighting, 1.0);
 }
