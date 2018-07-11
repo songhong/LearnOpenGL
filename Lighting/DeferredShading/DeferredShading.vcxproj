@@ -146,15 +146,14 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="textures\wood.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="shaders\deferred_light_box.fs" />
     <None Include="shaders\deferred_light_box.vs" />
     <None Include="shaders\deferred_shading.fs" />
     <None Include="shaders\deferred_shading.vs" />
     <None Include="shaders\g_buffer.fs" />
     <None Include="shaders\g_buffer.vs" />
+    <None Include="shaders\screen_shading.fs" />
+    <None Include="shaders\screen_shading.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

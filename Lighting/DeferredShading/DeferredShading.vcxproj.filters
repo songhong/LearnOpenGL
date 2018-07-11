@@ -20,11 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="textures\wood.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="shaders\deferred_light_box.fs">
       <Filter>Resource Files</Filter>
     </None>
@@ -41,6 +36,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="shaders\g_buffer.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\screen_shading.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\screen_shading.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

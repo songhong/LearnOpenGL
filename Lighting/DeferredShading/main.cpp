@@ -80,6 +80,7 @@ int main()
     // -------------------------
     Shader shaderGeometryPass("shaders/g_buffer.vs", "shaders/g_buffer.fs");
     Shader shaderLightingPass("shaders/deferred_shading.vs", "shaders/deferred_shading.fs");
+    Shader shaderScreenPass("shaders/screen_shading.vs", "shaders/screen_shading.fs");
     Shader shaderLightBox("shaders/deferred_light_box.vs", "shaders/deferred_light_box.fs");
 
     // load models
@@ -138,6 +139,23 @@ int main()
         std::cout << "Framebuffer not complete!" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    // configure l-buffer framebuffer
+    // ------------------------------
+    unsigned int lBuffer;
+    glGenFramebuffers(1, &lBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, lBuffer);
+    unsigned int gLighting;
+    // lighting color buffer
+    glGenTextures(1, &gLighting);
+    glBindTexture(GL_TEXTURE_2D, gLighting);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gLighting, 0);
+    // finally check if framebuffer is complete
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "Framebuffer not complete!" << std::endl;
+
     // lighting info
     // -------------
     const unsigned int NR_LIGHTS = 32;
@@ -165,6 +183,10 @@ int main()
     shaderLightingPass.setInt("gNormal", 1);
     shaderLightingPass.setInt("gAlbedoSpec", 2);
 
+    shaderScreenPass.use();
+    shaderScreenPass.setInt("gAlbedoSpec", 0);
+    shaderScreenPass.setInt("lightingMap", 1);
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -184,10 +206,16 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glEnable(GL_CULL_FACE);
+
         // 1. geometry pass: render scene's geometry/color data into gbuffer
         // -----------------------------------------------------------------
         glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+            glDepthMask(GL_TRUE);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_BLEND);
+            glCullFace(GL_BACK);
             glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
             glm::mat4 view = camera.GetViewMatrix();
             glm::mat4 model;
@@ -202,39 +230,74 @@ int main()
                 shaderGeometryPass.setMat4("model", model);
                 nanosuit.Draw(shaderGeometryPass);
             }
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // 2. lighting pass: calculate lighting by iterating over a screen filled quad pixel-by-pixel using the gbuffer's content.
         // -----------------------------------------------------------------------------------------------------------------------
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        shaderLightingPass.use();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, gPosition);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, gNormal);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+        glBindFramebuffer(GL_FRAMEBUFFER, lBuffer);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glDepthMask(GL_FALSE);
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendEquation(GL_FUNC_ADD);
+            glBlendFunc(GL_ONE, GL_ONE);
+            glCullFace(GL_FRONT);
+
+            shaderLightingPass.use();
+            shaderLightingPass.setMat4("projection", projection);
+            shaderLightingPass.setMat4("view", view);
+            shaderLightingPass.setVec3("viewPos", camera.Position);
+            shaderLightingPass.setVec2("gScreenSize", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, gPosition);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, gNormal);
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+
         // send light relevant uniforms
-        for (unsigned int i = 0; i < lightPositions.size(); i++)
+        const unsigned int lightCount = (unsigned int)lightPositions.size();
+        for (unsigned int i = 0; i < lightCount; i++)
         {
-            shaderLightingPass.setVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
-            shaderLightingPass.setVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
+            shaderLightingPass.setVec3("light.Position", lightPositions[i]);
+            shaderLightingPass.setVec3("light.Color", lightColors[i]);
             // update attenuation parameters and calculate radius
             const float constant = 1.0f; // note that we don't send this to the shader, we assume it is always 1.0 (in our case)
             const float linear = 0.7f;
             const float quadratic = 1.8f;
-            shaderLightingPass.setFloat("lights[" + std::to_string(i) + "].Linear", linear);
-            shaderLightingPass.setFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
+            shaderLightingPass.setFloat("light.Linear", linear);
+            shaderLightingPass.setFloat("light.Quadratic", quadratic);
             // then calculate radius of light volume/sphere
             const float maxBrightness = std::fmaxf(std::fmaxf(lightColors[i].r, lightColors[i].g), lightColors[i].b);
             float radius = (-linear + std::sqrt(linear * linear - 4 * quadratic * (constant - (256.0f / 5.0f) * maxBrightness))) / (2.0f * quadratic);
-            shaderLightingPass.setFloat("lights[" + std::to_string(i) + "].Radius", radius);
+
+            model = glm::mat4();
+            model = glm::translate(model, lightPositions[i]);
+            model = glm::scale(model, glm::vec3(radius));
+            shaderLightingPass.setMat4("model", model);
+
+            renderCube();
         }
-        shaderLightingPass.setVec3("viewPos", camera.Position);
-        // finally render quad
+
+        // 3. screen effect pass: add ambient and make gamma correction
+        // -----------------------------------------------------------------------------------------------------------------------
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glDepthMask(GL_FALSE);
+            glDisable(GL_DEPTH_TEST);
+            glDisable(GL_BLEND);
+            glCullFace(GL_BACK);
+
+            shaderScreenPass.use();
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, gLighting);
+
         renderQuad();
 
-        // 2.5. copy content of geometry's depth buffer to default framebuffer's depth buffer
+
+        // 3.5. copy content of geometry's depth buffer to default framebuffer's depth buffer
         // ----------------------------------------------------------------------------------
         glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
@@ -244,12 +307,16 @@ int main()
         glBlitFramebuffer(0, 0, SCR_WIDTH, SCR_HEIGHT, 0, 0, SCR_WIDTH, SCR_HEIGHT, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        // 3. render lights on top of scene
+        // 4. render lights on top of scene
         // --------------------------------
+        glDepthMask(GL_TRUE);
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
+        glCullFace(GL_BACK);
         shaderLightBox.use();
         shaderLightBox.setMat4("projection", projection);
         shaderLightBox.setMat4("view", view);
-        for (unsigned int i = 0; i < lightPositions.size(); i++)
+        for (unsigned int i = 0; i < lightCount; i++)
         {
             model = glm::mat4();
             model = glm::translate(model, lightPositions[i]);
@@ -427,5 +494,5 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(yoffset);
+    camera.ProcessMouseScroll((float)yoffset);
 }
