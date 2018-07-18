@@ -34,6 +34,8 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+#define ARRAY_COUNT(b) (sizeof(b)/sizeof(b[0]))
+
 int main()
 {
     // glfw: initialize and configure
@@ -103,7 +105,7 @@ int main()
     unsigned int gBuffer;
     glGenFramebuffers(1, &gBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-    unsigned int gPosition, gNormal, gAlbedoSpec;
+    unsigned int gPosition, gNormal, gAlbedoSpec, gLighting;
     // position color buffer
     glGenTextures(1, &gPosition);
     glBindTexture(GL_TEXTURE_2D, gPosition);
@@ -125,36 +127,23 @@ int main()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
-    // tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
-    unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-    glDrawBuffers(3, attachments);
-    // create and attach depth buffer (renderbuffer)
-    unsigned int rboDepth;
-    glGenRenderbuffers(1, &rboDepth);
-    glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, SCR_WIDTH, SCR_HEIGHT);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
-    // finally check if framebuffer is complete
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cout << "Framebuffer not complete!" << std::endl;
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    // configure l-buffer framebuffer
-    // ------------------------------
-    unsigned int lBuffer;
-    glGenFramebuffers(1, &lBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, lBuffer);
-    unsigned int gLighting;
-    // lighting color buffer
+    // lighting result color buffer
     glGenTextures(1, &gLighting);
     glBindTexture(GL_TEXTURE_2D, gLighting);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gLighting, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gLighting, 0);
+    // create and attach depth buffer (renderbuffer)
+    unsigned int rboDepth;
+    glGenRenderbuffers(1, &rboDepth);
+    glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
     // finally check if framebuffer is complete
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "Framebuffer not complete!" << std::endl;
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // lighting info
     // -------------
@@ -204,18 +193,27 @@ int main()
         // render
         // ------
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glEnable(GL_CULL_FACE);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         // 1. geometry pass: render scene's geometry/color data into gbuffer
         // -----------------------------------------------------------------
         glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
             glDepthMask(GL_TRUE);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glStencilMask(GL_TRUE);
+            glDisable(GL_STENCIL_TEST);
             glEnable(GL_DEPTH_TEST);
             glDisable(GL_BLEND);
+            glEnable(GL_CULL_FACE);
             glCullFace(GL_BACK);
+
+            // clear all color attachments
+            unsigned int allAttachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+            glDrawBuffers(ARRAY_COUNT(allAttachments), allAttachments);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+            // tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
+            unsigned int geoAttachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+            glDrawBuffers(ARRAY_COUNT(geoAttachments), geoAttachments);
+
             glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
             glm::mat4 view = camera.GetViewMatrix();
             glm::mat4 model;
@@ -231,22 +229,11 @@ int main()
                 nanosuit.Draw(shaderGeometryPass);
             }
 
-        // 2. lighting pass: calculate lighting by iterating over a screen filled quad pixel-by-pixel using the gbuffer's content.
+        // 2. stencil and lighting pass: calculate lighting by iterating over a screen filled quad pixel-by-pixel using the gbuffer's content.
         // -----------------------------------------------------------------------------------------------------------------------
-        glBindFramebuffer(GL_FRAMEBUFFER, lBuffer);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+            glEnable(GL_STENCIL_TEST);
             glDepthMask(GL_FALSE);
-            glDisable(GL_DEPTH_TEST);
-            glEnable(GL_BLEND);
-            glBlendEquation(GL_FUNC_ADD);
-            glBlendFunc(GL_ONE, GL_ONE);
-            glCullFace(GL_FRONT);
-
-            shaderLightingPass.use();
-            shaderLightingPass.setMat4("projection", projection);
-            shaderLightingPass.setMat4("view", view);
-            shaderLightingPass.setVec3("viewPos", camera.Position);
-            shaderLightingPass.setVec2("gScreenSize", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, gPosition);
@@ -255,7 +242,12 @@ int main()
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
 
-        // send light relevant uniforms
+            shaderLightingPass.use();
+            shaderLightingPass.setMat4("projection", projection);
+            shaderLightingPass.setMat4("view", view);
+            shaderLightingPass.setVec3("viewPos", camera.Position);
+            shaderLightingPass.setVec2("gScreenSize", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
+
         const unsigned int lightCount = (unsigned int)lightPositions.size();
         for (unsigned int i = 0; i < lightCount; i++)
         {
@@ -276,15 +268,42 @@ int main()
             model = glm::scale(model, glm::vec3(radius));
             shaderLightingPass.setMat4("model", model);
 
+            // 2.1 stencil
+            glStencilMask(GL_TRUE);
+            glStencilFunc(GL_ALWAYS, 0, 0);
+            glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
+            glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_BLEND);
+            glDisable(GL_CULL_FACE);
+
+            glClear(GL_STENCIL_BUFFER_BIT);
+            glDrawBuffer(GL_NONE);
+            renderCube();
+
+            // 2.2 lighting
+            glStencilMask(GL_FALSE);
+            glStencilFunc(GL_NOTEQUAL, 0, 0xff);
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendEquation(GL_FUNC_ADD);
+            glBlendFunc(GL_ONE, GL_ONE);
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT);
+
+            glDrawBuffer(GL_COLOR_ATTACHMENT3);
             renderCube();
         }
 
         // 3. screen effect pass: add ambient and make gamma correction
         // -----------------------------------------------------------------------------------------------------------------------
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glStencilMask(GL_FALSE);
             glDepthMask(GL_FALSE);
+            glDisable(GL_STENCIL_TEST);
             glDisable(GL_DEPTH_TEST);
             glDisable(GL_BLEND);
+            glEnable(GL_CULL_FACE);
             glCullFace(GL_BACK);
 
             shaderScreenPass.use();
@@ -312,6 +331,7 @@ int main()
         glDepthMask(GL_TRUE);
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
+        glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         shaderLightBox.use();
         shaderLightBox.setMat4("projection", projection);
