@@ -41,5 +41,8 @@
     <None Include="textures\artist_workshop_4k.hdr">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="shaders\irradiance_convolution.ps">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
