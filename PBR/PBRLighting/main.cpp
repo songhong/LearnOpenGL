@@ -8,7 +8,7 @@
 #include <shader.h>
 #include <camera.h>
 #include <model.h>
-
+#include <stb_image.h>
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -82,7 +82,21 @@ int main()
     shader.use();
     //shader.setVec3("albedo", 0.5f, 0.0f, 0.0f);
     shader.setVec3("albedo", 1.0f, 0.71f, 0.29f); // Gold
+
+    shader.setInt("albedoMap", 0);
+    shader.setInt("normalMap", 1);
+    shader.setInt("metallicMap", 2);
+    shader.setInt("roughnessMap", 3);
+    //shader.setInt("aoMap", 4);
     shader.setFloat("ao", 1.0f);
+
+    // load PBR material textures
+    // --------------------------
+    unsigned int albedo = loadTexture("textures/rustediron_basecolor.png");
+    unsigned int normal = loadTexture("textures/rustediron_normal.png");
+    unsigned int metallic = loadTexture("textures/rustediron_metallic.png");
+    unsigned int roughness = loadTexture("textures/rustediron_roughness.png");
+    //unsigned int ao = loadTexture("textures/rustediron_ao.png");
 
     // lights
     // ------
@@ -132,7 +146,16 @@ int main()
         shader.setMat4("view", view);
         shader.setVec3("camPos", camera.Position);
 
-        // render rows*column number of spheres with varying metallic/roughness values scaled by rows and columns respectively
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, albedo);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, normal);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, metallic);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, roughness);
+
+        // render rows*column number of spheres with material properties defined by textures (they all have the same material properties)
         glm::mat4 model = glm::mat4(1.0f);
         for (int row = 0; row < nrRows; ++row) 
         {
@@ -145,8 +168,8 @@ int main()
                 
                 model = glm::mat4(1.0f);
                 model = glm::translate(model, glm::vec3(
-                    (col - (nrColumns / 2)) * spacing, 
-                    (row - (nrRows / 2)) * spacing, 
+                    (float)(col - (nrColumns / 2)) * spacing, 
+                    (float)(row - (nrRows / 2)) * spacing, 
                     0.0f
                 ));
                 shader.setMat4("model", model);
@@ -337,4 +360,43 @@ void renderSphere()
 
     glBindVertexArray(sphereVAO);
     glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
+}
+
+// utility function for loading a 2D texture from file
+// ---------------------------------------------------
+unsigned int loadTexture(char const* path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+
+    int width, height, nrComponents;
+    unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data)
+    {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
+    }
+
+    return textureID;
 }
