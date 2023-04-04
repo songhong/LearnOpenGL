@@ -136,12 +136,12 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         for (int row = 0; row < nrRows; ++row) 
         {
-            shader.setFloat("metallic", (float)row / (float)nrRows);
+            shader.setFloat("metallic", (float)row / (float)(nrRows-1));
             for (int col = 0; col < nrColumns; ++col) 
             {
                 // we clamp the roughness to 0.05 - 1.0 as perfectly smooth surfaces (roughness of 0.0) tend to look a bit off
                 // on direct lighting.
-                shader.setFloat("roughness", glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
+                shader.setFloat("roughness", glm::clamp((float)col / (float)(nrColumns-1), 0.05f, 1.0f));
                 
                 model = glm::mat4(1.0f);
                 model = glm::translate(model, glm::vec3(
