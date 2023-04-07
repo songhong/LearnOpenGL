@@ -19,4 +19,36 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\brdf.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\cubemap.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\equirectangular_to_cubemap.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\irradiance_convolution.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\pbr.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\pbr.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\prefilter.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\background.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\background.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\brdf.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

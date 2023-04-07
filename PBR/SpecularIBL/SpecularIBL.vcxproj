@@ -155,6 +155,18 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\background.ps" />
+    <None Include="shaders\background.vs" />
+    <None Include="shaders\brdf.ps" />
+    <None Include="shaders\brdf.vs" />
+    <None Include="shaders\cubemap.vs" />
+    <None Include="shaders\equirectangular_to_cubemap.ps" />
+    <None Include="shaders\irradiance_convolution.ps" />
+    <None Include="shaders\pbr.ps" />
+    <None Include="shaders\pbr.vs" />
+    <None Include="shaders\prefilter.ps" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
