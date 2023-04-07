@@ -419,8 +419,8 @@ int main()
         backgroundShader.setMat4("view", view);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap); // display irradiance map
-        glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap); // display prefilter map
+        //glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap); // display irradiance map
+        //glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap); // display prefilter map
         renderCube();
 
 
